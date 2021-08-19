@@ -2,15 +2,12 @@ import { DemoApplication } from "./src/DemoApplication";
 
 function autorun() {
 	const instance = new DemoApplication({
-		pixi: {
-			antialias: true,
-			autoResize: true,
-			backgroundColor: 0x6495ed,
-			resolution: window.devicePixelRatio,
-			width: window.innerWidth,
-			height: window.innerHeight,
-		}
-	});
+        pixi:{ 
+            width: window.innerWidth, 
+            height: window.innerHeight, 
+            backgroundColor: 0x378abc
+        }
+    });
     instance.on();
 }
 
