@@ -9,25 +9,9 @@ function autorun() {
 			resolution: window.devicePixelRatio,
 			width: window.innerWidth,
 			height: window.innerHeight,
-			view: document.getElementById("renderer") as HTMLCanvasElement
-		},
-		world: {
-			height: 10000,
-			width: 10000
 		}
 	});
-
-	instance.on("initialized", () => {
-		console.log("Application Initialized");
-	});
-
-	window.addEventListener("resize", () => {
-		instance.handleResize();
-	});
-
-	instance.load({
-		cubes: [["alpha", 10000 / 2, 10000 / 2, 100]]
-	});
+    instance.on();
 }
 
 if (window.addEventListener) {

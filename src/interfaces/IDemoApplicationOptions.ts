@@ -1,7 +1,7 @@
 import { ApplicationOptions } from "pixi.js";
-import { IWorldOptions } from "./IWorldOptions";
+// import { IWorldOptions } from "./IWorldOptions";
 
 export interface IDemoApplicationOptions {
-	world?: IWorldOptions;
+	// world?: IWorldOptions;
 	pixi?: ApplicationOptions;
 }
