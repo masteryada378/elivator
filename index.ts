@@ -5,10 +5,11 @@ function autorun() {
         pixi:{ 
             width: window.innerWidth, 
             height: window.innerHeight, 
-            backgroundColor: 0x378abc
+            backgroundColor: 0x008000
         }
     });
     instance.on();
+
 }
 
 if (window.addEventListener) {
