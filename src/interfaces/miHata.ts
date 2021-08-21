@@ -5,5 +5,6 @@ export interface MiHata {
 	leftWall: Graphics;
 	rightWall: Graphics;
 	ceiling: Graphics;
-    flor?:Graphics[];
+    floors:Graphics[];
+    people:Graphics[];
 }
