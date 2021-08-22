@@ -12,7 +12,7 @@ export class DemoApplication {
 	public miHataElement: MiHata;
 	public tweenDer: Tween;
 
-	public tempCounter: object = {x:0, y: 10};
+	public tempCounter: any = {x:0, y: 10};
 
 	constructor(option: IDemoApplicationOptions) {
 		this.appMi = new Application(option.pixi);
@@ -53,20 +53,21 @@ export class DemoApplication {
 		console.log
 
 		this.tweenDer = new Tween(this.tempCounter)
-			.to({x: 1000}, 5000)
+			.to({x:300}, 10000)
+			// .delay(1000)
 			.onUpdate(() => {
 				console.log('hello');
-				console.log(this.tempCounter);
+				this.miHataElement.people[0].x -= 1;
+
 			})
 			.start(); 
 
-		// Ticker.shared.add(this.updateME, this);	
+		Ticker.shared.add(this.updateME, this);	
 
 	}
 	private updateME() {
 		this.moveME();
 		this.tweenDer.update();
-		// console.log(this.tempCounter);
 	}
 	private moveME() {
 
