@@ -1,4 +1,6 @@
-import { Application, Sprite, Container, Graphics,filters} from "pixi.js";
+import { Application, Sprite, Container, Graphics, Rectangle, Ticker} from "pixi.js";
+import { Tween } from "@tweenjs/tween.js";
+
 import { IDemoApplicationOptions } from "./interfaces/IDemoApplicationOptions";
 import { MiHata } from "./interfaces/MiHata";
 
@@ -8,6 +10,9 @@ export class DemoApplication {
 	public containerMi: Container;
 	private hata : Container;
 	public miHataElement: MiHata;
+	public tweenDer: Tween;
+
+	public tempCounter: object = {x:0, y: 10};
 
 	constructor(option: IDemoApplicationOptions) {
 		this.appMi = new Application(option.pixi);
@@ -27,10 +32,9 @@ export class DemoApplication {
 			],
 			people:[]
 		};
-
+		this.tweenDer = new Tween();
 	}
 	public on() {
-
 		this.bgFhone.width = window.innerWidth - 40;
 		this.bgFhone.height = window.innerHeight - 40;
 		this.containerMi.x = 0;
@@ -44,6 +48,34 @@ export class DemoApplication {
 		this.buildBuilding();
 		this.addFloors();
 		this.addPiple();
+		this.moveME();
+
+		console.log
+
+		this.tweenDer = new Tween(this.tempCounter)
+			.to({x: 1000}, 5000)
+			.onUpdate(() => {
+				console.log('hello');
+				console.log(this.tempCounter);
+			})
+			.start(); 
+
+		// Ticker.shared.add(this.updateME, this);	
+
+	}
+	private updateME() {
+		this.moveME();
+		this.tweenDer.update();
+		// console.log(this.tempCounter);
+	}
+	private moveME() {
+
+
+		
+
+		if (this.checkCollision(this.miHataElement.people[0], this.miHataElement.people[1])) {
+
+		}
 	}
 
 	private buildBuilding() {
@@ -110,13 +142,41 @@ export class DemoApplication {
 		this.hata.addChild(this.miHataElement.floors[2]);
 		this.hata.addChild(this.miHataElement.floors[3]);
 	}
+
 	public addPiple() {
-		console.log(this.miHataElement.floors[0].y);
 		this.miHataElement.people.push(new Graphics);
 		this.miHataElement.people[0].beginFill(0x4B0082, 1);
 		this.miHataElement.people[0].drawRect(750,this.miHataElement.floors[0].y + 15,40,70);
 		this.miHataElement.people[0].endFill();
 		this.miHataElement.people[0].endHole();
 		this.hata.addChild(this.miHataElement.people[0]);
+
+		this.miHataElement.people.push(new Graphics);
+		this.miHataElement.people[1].beginFill(0x54fffd, 1);
+		this.miHataElement.people[1].drawRect(700,this.miHataElement.floors[0].y + 15,40,70);
+		this.miHataElement.people[1].endFill();
+		this.miHataElement.people[1].endHole();
+		this.hata.addChild(this.miHataElement.people[1]);
+		console.log(this.miHataElement.people[1].getBounds());
+
 	}
+
+	public checkCollision(objA:Graphics, objB:Graphics) {
+		const a:Rectangle = objA.getBounds();
+    	const b:Rectangle = objB.getBounds();
+		
+		const rightmostLeft = a.left < b.left ? b.left : a.left;
+		const leftmostRight = a.right > b.right ? b.right : a.right;
+		
+		if (leftmostRight <= rightmostLeft)
+		{
+			return false;
+		}
+		
+		const bottommostTop = a.top < b.top ? b.top : a.top;
+		const topmostBottom = a.bottom > b.bottom ? b.bottom : a.bottom;
+		
+		return topmostBottom > bottommostTop;
+	}
+
 }
