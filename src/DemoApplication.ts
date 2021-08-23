@@ -11,7 +11,8 @@ export class DemoApplication {
 	private hata : Container;
 	public miHataElement: MiHata;
 	public tweenDer: Tween;
-
+	
+	private timMgn:  any;
 	public tempCounter: any = {x:0, y: 10};
 
 	constructor(option: IDemoApplicationOptions) {
@@ -33,6 +34,9 @@ export class DemoApplication {
 			people:[]
 		};
 		this.tweenDer = new Tween();
+		this.timMgn = {
+			xLeft: 720,
+		}
 	}
 	public on() {
 		this.bgFhone.width = window.innerWidth - 40;
@@ -48,31 +52,25 @@ export class DemoApplication {
 		this.buildBuilding();
 		this.addFloors();
 		this.addPiple();
-		this.moveME();
-
-		console.log
-
-		this.tweenDer = new Tween(this.tempCounter)
-			.to({x:300}, 10000)
-			// .delay(1000)
-			.onUpdate(() => {
-				console.log('hello');
-				this.miHataElement.people[0].x -= 1;
-
-			})
-			.start(); 
-
-		Ticker.shared.add(this.updateME, this);	
-
+		this.initTwee();
+		console.log(this.timMgn);
 	}
 	private updateME() {
-		this.moveME();
 		this.tweenDer.update();
 	}
+	private initTwee() {
+		this.tweenDer = new Tween(this.tempCounter)
+		.to({x:-this.timMgn.xLeft}, 1000)
+		.onUpdate(() => {
+			this.moveME();
+		})
+		.start(); 
+	Ticker.shared.add(this.updateME, this);	
+	}
 	private moveME() {
-
-
 		
+		console.log(this.tempCounter);
+		this.miHataElement.people[0].x = this.tempCounter.x;
 
 		if (this.checkCollision(this.miHataElement.people[0], this.miHataElement.people[1])) {
 
