@@ -11,7 +11,10 @@ export class DemoApplication {
 	private hata : Container;
 	public miHataElement: MiHata;
 	public tweenDer: Tween;
-	
+	public tweenElv: Tween;
+	public tweenHome: Tween;
+	public elivator: Graphics;
+	public isElivator: boolean = true;
 	private timMgn:  any;
 	public tempCounter: any = {x:0, y: 10};
 
@@ -34,10 +37,14 @@ export class DemoApplication {
 			people:[]
 		};
 		this.tweenDer = new Tween();
+		this.tweenHome = new Tween();
+		this.tweenElv = new Tween();
 		this.timMgn = {
-			xLeft: 720,
-		}
-	}
+			xLeft: 680,
+			xTop: 210,
+		};
+		this.elivator = new Graphics;
+	} 
 	public on() {
 		this.bgFhone.width = window.innerWidth - 40;
 		this.bgFhone.height = window.innerHeight - 40;
@@ -46,17 +53,12 @@ export class DemoApplication {
 		this.appMi.stage.addChild(this.containerMi);
 		this.containerMi.addChild(this.bgFhone);
 		document.body.appendChild(this.appMi.view);
-		// const blurFilter1 = new filters.BlurFilter();
-		// this.bgFhone.filters = [blurFilter1];
-		// blurFilter1.blur = 5;
 		this.buildBuilding();
 		this.addFloors();
 		this.addPiple();
+		this.addElivator();
 		this.initTwee();
-		console.log(this.timMgn);
-	}
-	private updateME() {
-		this.tweenDer.update();
+		Ticker.shared.add(this.gameLoop, this);	
 	}
 	private initTwee() {
 		this.tweenDer = new Tween(this.tempCounter)
@@ -65,16 +67,52 @@ export class DemoApplication {
 			this.moveME();
 		})
 		.start(); 
-	Ticker.shared.add(this.updateME, this);	
 	}
+
+	private iSIamGo() {
+		if(this.checkCollision(this.elivator, this.miHataElement.people[0]) 
+			&& this.isElivator){
+			this.elevatorGo();
+			this.isElivator = false;
+		}	
+	}
+
 	private moveME() {
-		
-		console.log(this.tempCounter);
 		this.miHataElement.people[0].x = this.tempCounter.x;
+		
+	}
 
-		if (this.checkCollision(this.miHataElement.people[0], this.miHataElement.people[1])) {
+	public elevatorGo(){
+		this.tweenElv = new Tween(this.elivator)
+		.to({y:-this.timMgn.xTop}, 2000)
+		.onUpdate(() => {
+			this.miHataElement.people[0].y = this.elivator.y;
+		})
+		.delay(400)
+		.onComplete(()=>{
+			this.returnToHome();
+		})
+		.start();
+		console.log(this.miHataElement);
 
-		}
+	}
+	public returnToHome(){
+		console.log('home');
+		let countesN: any = {x:-680};
+		this.tweenHome = new Tween(this.miHataElement.people[0])
+		.to({x:0}, 1000)
+		.onUpdate(() => {
+			console.log('moveME')
+		})
+		.start(); 
+	}
+
+	public gameLoop() {
+		this.tweenDer.update();
+		this.tweenHome.update();
+		this.tweenElv.update();
+		this.iSIamGo();
+		
 	}
 
 	private buildBuilding() {
@@ -108,6 +146,13 @@ export class DemoApplication {
 		this.hata.addChild(this.miHataElement.ceiling);
 
 		this.containerMi.addChild(this.hata);
+	}
+
+	public addElivator(){
+		
+		this.elivator.lineStyle(5, 0xD82257);
+		this.elivator.drawRect(60,530,70,100);		
+		this.hata.addChild(this.elivator);
 	}
 
 	public addFloors() {
